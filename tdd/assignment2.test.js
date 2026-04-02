@@ -14,16 +14,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 describe("Assignment 2: Event Handlers, HTTP Servers, and Express", () => {
-  const assignmentDir = path.join(__dirname, "../assignment2");
+  const assignmentDir = path.join(__dirname, "../");
   const rootDir = path.join(__dirname, "..");
-
-  beforeAll(() => {
-    if (!fs.existsSync(assignmentDir)) {
-      throw new Error(
-        "assignment2 directory does not exist. Please create it first.",
-      );
-    }
-  });
 
   describe("Task 1: Event Emitter and Listener", () => {
     test("events.js should exist and implement time event emitter", async () => {
@@ -168,7 +160,7 @@ describe("Assignment 2: Event Handlers, HTTP Servers, and Express", () => {
   describe("Task 4: Middleware", () => {
     test("middleware/error-handler.js should report a server error", async () => {
       const { default: errHandler } = await import(
-        "../../nodev4/mentor-guidebook/sample-answers/assignment2/middleware/error-handler.js"
+        "../middleware/error-handler.js"
       );
       const req = httpMocks.createRequest();
       const res = httpMocks.createResponse();
@@ -180,7 +172,7 @@ describe("Assignment 2: Event Handlers, HTTP Servers, and Express", () => {
 
     test("middleware/not-found.js should return a 404", async () => {
       const { default: notFound } = await import(
-        "../../nodev4/mentor-guidebook/sample-answers/assignment2/middleware/not-found.js"
+        "../middleware/not-found.js"
       );
       const req = httpMocks.createRequest();
       const res = httpMocks.createResponse();
