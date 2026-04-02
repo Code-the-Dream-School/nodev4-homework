@@ -134,7 +134,7 @@ describe("Assignment 2: Event Handlers, HTTP Servers, and Express", () => {
     let server;
 
     beforeAll(async () => {
-      const appModule = await import("../../nodev4/mentor-guidebook/sample-answers/assignment2/assignment2/app.js");
+      const appModule = await import("../app.js");
       const { app } = appModule;
       server = appModule.server;
       agent = request(app);
