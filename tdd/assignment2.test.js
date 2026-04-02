@@ -14,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 describe("Assignment 2: Event Handlers, HTTP Servers, and Express", () => {
-  const assignmentDir = path.join(__dirname, "../");
+  const assignmentDir = path.join(__dirname, "../assignment2");
   const rootDir = path.join(__dirname, "..");
 
   describe("Task 1: Event Emitter and Listener", () => {
