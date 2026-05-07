@@ -35,13 +35,13 @@ describe("testing logon, register, and logoff", () => {
     expect(saveRes.statusCode).toBe(201);
     user1 = global.user_id;
   });
-  it("The user can be logged on", async () => {
+  it("The user can log on successfully.", async () => {
     const req = httpMocks.createRequest({
       method: "POST",
       body: { email: "jim@sample.com", password: "Pa$$word20" },
     });
     saveRes = httpMocks.createResponse();
-    await logon(req, saveRes); // no need for await here
+    await logon(req, saveRes);
     expect(saveRes.statusCode).toBe(200); // success!
   });
 
@@ -81,7 +81,7 @@ describe("testing logon, register, and logoff", () => {
     await logon(req, saveRes);
     expect(saveRes.statusCode).toBe(200);
   });
-  it("You can now logoff.", async () => {
+  it("The user can log off successfully.", async () => {
     const req = httpMocks.createRequest({
       method: "POST",
     });
@@ -167,7 +167,7 @@ describe("testing the update and delete of tasks.", () => {
     await update(req, saveRes);
     expect(saveRes.statusCode).toBe(200);
   });
-  it("User2 can't do this.", async () => {
+  it("User2 cannot update User1's task.", async () => {
     const req = httpMocks.createRequest({
       method: "PATCH",
     });
@@ -178,7 +178,7 @@ describe("testing the update and delete of tasks.", () => {
     await update(req, saveRes);
     expect(saveRes.statusCode).not.toBe(200);
   });
-  it("User2 can't delete this task.", async () => {
+  it("User2 cannot delete User1's task.", async () => {
     const req = httpMocks.createRequest({
       method: "DELETE",
     });
@@ -187,7 +187,7 @@ describe("testing the update and delete of tasks.", () => {
     await deleteTask(req, saveRes);
     expect(saveRes.statusCode).not.toBe(200);
   });
-  it("User1 can delete this task.", async () => {
+  it("User1 can delete the task they created.", async () => {
     const req = httpMocks.createRequest({
       method: "DELETE",
     });
@@ -311,7 +311,13 @@ if (taskSchema) {
       const { value } = taskSchema.validate({ title: "first task" });
       expect(value.isCompleted).toBe(false);
     });
-    it("If `isCompleted` in the provided object has the value `true`, it remains `true` after validation.", () => {});
+    it("If `isCompleted` in the provided object has the value `true`, it remains `true` after validation.", () => {
+      const { value } = taskSchema.validate({
+        title: "first task",
+        isCompleted: true,
+      });
+      expect(value.isCompleted).toBe(true);
+    });
   });
 
   describe("patchTask object validation test", () => {
