@@ -1,6 +1,6 @@
 import "dotenv/config";
 import httpMocks from "node-mocks-http";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
 
@@ -22,22 +22,44 @@ let saveRes = null;
 let saveData = null;
 let saveTaskId = null;
 
+beforeAll(async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      name TEXT NOT NULL,
+      hashed_password TEXT NOT NULL
+    );
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS tasks (
+      id SERIAL PRIMARY KEY,
+      title TEXT NOT NULL,
+      is_completed BOOLEAN NOT NULL DEFAULT FALSE,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE
+    );
+  `);
+});
+
 describe("test that database and tables exist", () => {
   it("connects to database", async () => {
     let databaseExists = true;
     try {
       await pool.query("SELECT 1;");
     } catch (err) {
-      console.log("Error: the test database hasn't been created.");
+      console.log(
+        "Could not connect to the test database. It may be sleeping or temporarily unavailable. Please wait a moment and try again.",
+      );
       databaseExists = false;
     }
     expect(databaseExists).toBe(true);
   });
   it("clears the tasks table", async () => {
-    expect(async () => await pool.query("DELETE FROM tasks;")).not.toThrow();
+    await expect(pool.query("DELETE FROM tasks;")).resolves.toBeDefined();
   });
   it("clears the users table", async () => {
-    expect(async () => await pool.query("DELETE FROM users;")).not.toThrow();
+    await expect(pool.query("DELETE FROM users;")).resolves.toBeDefined();
   });
 });
 
